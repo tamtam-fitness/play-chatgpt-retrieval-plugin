@@ -2,16 +2,23 @@ services:
   retrieval-app:
     build:
       context: ../../../
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     image: openai/chatgpt-retrieval-plugin
     ports:
       - "8080:8080"
+    working_dir: /app
+    command: poetry run uvicorn local_server.main:app --host 0.0.0.0 --port 8080 --reload
+    stdin_open: true
+    tty: true
+    container_name: retrieval-app
+    volumes:
+      - ../../../:/app
     depends_on:
       - qdrant
     environment:
       DATASTORE: "qdrant"
       QDRANT_URL: "http://qdrant"
-      BEARER_TOKEN: "${BEARER_TOKEN}"
+#      BEARER_TOKEN: "${BEARER_TOKEN}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
   qdrant:
     image: qdrant/qdrant:v1.0.3

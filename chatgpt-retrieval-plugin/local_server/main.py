@@ -10,11 +10,13 @@ from models.api import (
     DeleteResponse,
     QueryRequest,
     QueryResponse,
+    QueryAndAskResponse,
     UpsertRequest,
     UpsertResponse,
 )
 from datastore.factory import get_datastore
 from services.file import get_document_from_file
+from services.ask_based_on_query_result import ask_based_on_query_result
 
 from starlette.responses import FileResponse
 
@@ -108,11 +110,32 @@ async def query_main(request: QueryRequest = Body(...)):
         results = await datastore.query(
             request.queries,
         )
+        logger.info(f"results: {results}")
         return QueryResponse(results=results)
     except Exception as e:
         logger.error(e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
+@app.post(
+    "/query-and-ask",
+    response_model=QueryAndAskResponse,
+    # NOTE: We are describing the shape of the API endpoint input due to a current limitation in parsing arrays of objects from OpenAPI schemas. This will not be necessary in the future.
+    description="query like /query and ask chatbot to answer the question",
+)
+async def query_and_ask(
+    request: QueryRequest = Body(...),
+):
+    try:
+        results = await datastore.query(
+            request.queries,
+        )
+        # ここでchatbotに質問する。一旦はresultsの最初のqueryを使う。
+        ask_result = await ask_based_on_query_result(results[0])
+
+        return QueryAndAskResponse(results=[ask_result])
+    except Exception as e:
+        logger.exception(e)
+        raise HTTPException(status_code=500, detail="Internal Service Error")
 
 @app.delete(
     "/delete",

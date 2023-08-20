@@ -4234,4 +4234,4 @@ postgresql = ["psycopg2cffi"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "9140339a3000bae678247d4ec1c314ed4842957d435a7ae28cc928c7678f84c0"
+content-hash = "ea0ad14f0ca527de1f3858b293c536c94e18ba05c38384e4617179634b2e8ff9"

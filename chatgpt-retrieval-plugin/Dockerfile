@@ -17,6 +17,7 @@ WORKDIR /code
 
 COPY --from=requirements-stage /tmp/requirements.txt /code/requirements.txt
 
+# ref: https://github.com/Guandaline/chatgpt-retrieval-plugin/commit/f7300c27de86e5481511dcbcd8e33a05b222ecc3#diff-dd2c0eb6ea5cfc6c4bd4eac30934e2d5746747af48fef6da689e85b752f39557
 RUN apt-get update
 RUN pip install --upgrade pip
 

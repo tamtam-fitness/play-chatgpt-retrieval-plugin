@@ -7,10 +7,6 @@ cd chatgpt-retrieval-plugin/examples/docker/qdrant/
 
 export OPENAI_API_KEY=<your OpenAI API key>
 
-# https://jwt.io/
-# (you don't have to do that if local_server is used)
-export BEARER_TOKEN=<your jwt>
-
 docker compose up -d
 ```
 
@@ -19,7 +15,7 @@ docker compose up -d
 
 FYI: `localhost:8080/docs`
 
-### Upsert
+### /upsert
 
 ```bash
 
@@ -27,7 +23,6 @@ curl -X 'POST' \
   'http://localhost:8080/upsert' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <your jwt>' \
   -d '{
   "documents": [
     {
@@ -61,14 +56,13 @@ curl -X 'POST' \
 ```
 ![](./img/upsert.png)
 
-### Query
+### /query
 
 ```bash
 curl -X 'POST' \
   'http://localhost:8080/query' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <>' \
   -d '{
   "queries": [
     {
@@ -80,3 +74,23 @@ curl -X 'POST' \
 ```
 
 ![](./img/query.png)
+
+
+### /query-and-ask
+
+```bash
+curl -X 'POST' \
+  'http://localhost:8080/query-and-ask' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "queries": [
+    {
+      "query": "what is chatgpt",
+      "top_k": 3
+    }
+  ]
+}'
+```
+
+![](./img/query_and_ask.png)
